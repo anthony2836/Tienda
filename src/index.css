@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee:wght@400&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.cjs";
 
 @layer base {
   :root {
@@ -82,13 +80,13 @@
 @layer base {
   * {
     box-sizing: border-box;
-    border-color: rgb(var(--border) / 1);
-    outline-color: rgb(var(--ring) / 0.5);
+    border-color: hsl(var(--border));
+    outline-color: hsl(var(--ring) / 0.5);
   }
 
   body {
-    background-color: rgb(var(--background) / 1);
-    color: rgb(var(--foreground) / 1);
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: var(--font-inter);
   }
 }
