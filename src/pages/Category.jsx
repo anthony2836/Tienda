@@ -1,16 +1,8 @@
-import React from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import ProductCard from '@/components/store/ProductCard';
 import { Skeleton } from '@/components/ui/skeleton';
-
-const categoryTitles = {
-  camisetas: 'Camisetas',
-  pantalones: 'Pantalones',
-  sudaderas: 'Sudaderas',
-  zapatillas: 'Zapatillas',
-  accesorios: 'Accesorios',
-};
+import { CATEGORY_DESCRIPTIONS, CATEGORY_IMAGES, CATEGORY_LABELS } from '@/lib/store-config';
 
 export default function Category() {
   const path = window.location.pathname;
@@ -22,7 +14,8 @@ export default function Category() {
     enabled: !!categorySlug,
   });
 
-  const title = categoryTitles[categorySlug] || categorySlug;
+  const title = CATEGORY_LABELS[categorySlug] || categorySlug;
+  const description = CATEGORY_DESCRIPTIONS[categorySlug];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
@@ -31,6 +24,29 @@ export default function Category() {
           Categoría
         </p>
         <h1 className="text-3xl lg:text-5xl font-bold tracking-tight">{title}</h1>
+        {description && (
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            {description}
+          </p>
+        )}
+        {categorySlug === 'futbol' && (
+          <div className="relative mt-8 h-56 overflow-hidden rounded-lg bg-neutral-950 sm:h-72">
+            <img
+              src={CATEGORY_IMAGES.futbol}
+              alt="Camisetas de fútbol streetwear"
+              className="h-full w-full object-cover opacity-75"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-transparent" />
+            <div className="absolute inset-y-0 left-0 flex max-w-md flex-col justify-center px-6 text-white sm:px-8">
+              <p className="text-xs font-medium uppercase tracking-[0.3em] text-white/55">
+                Streetwear + deporte
+              </p>
+              <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
+                Camisetas con presencia dentro y fuera del campo
+              </h2>
+            </div>
+          </div>
+        )}
       </div>
 
       {isLoading ? (

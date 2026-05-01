@@ -1,10 +1,8 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import CategoryBanner from './CategoryBanner';
+import { CATEGORY_ORDER } from '@/lib/store-config';
 
 export default function CategoriesGrid({ categoryImages }) {
-  const categories = ['camisetas', 'pantalones', 'sudaderas', 'zapatillas', 'accesorios'];
-
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 lg:pb-28">
       <motion.div
@@ -20,7 +18,7 @@ export default function CategoriesGrid({ categoryImages }) {
       </motion.div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {categories.map(cat => (
+        {CATEGORY_ORDER.map(cat => (
           <CategoryBanner key={cat} categoryKey={cat} image={categoryImages[cat]} />
         ))}
       </div>

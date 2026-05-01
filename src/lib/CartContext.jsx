@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 
 const CartContext = createContext();
 
@@ -7,6 +7,8 @@ export function CartProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const addItem = useCallback((product, size) => {
+    if (!product || !size) return false;
+
     setItems(prev => {
       const existing = prev.find(i => i.product.id === product.id && i.size === size);
       if (existing) {
@@ -19,6 +21,7 @@ export function CartProvider({ children }) {
       return [...prev, { product, size, quantity: 1 }];
     });
     setIsOpen(true);
+    return true;
   }, []);
 
   const removeItem = useCallback((productId, size) => {

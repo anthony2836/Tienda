@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Menu, X } from 'lucide-react';
 import { useCart } from '@/lib/CartContext';
@@ -11,6 +11,7 @@ const navLinks = [
   { label: 'Pantalones', path: '/categoria/pantalones' },
   { label: 'Sudaderas', path: '/categoria/sudaderas' },
   { label: 'Zapatillas', path: '/categoria/zapatillas' },
+  { label: 'Fútbol', path: '/categoria/futbol' },
   { label: 'Accesorios', path: '/categoria/accesorios' },
 ];
 
@@ -36,12 +37,12 @@ export default function Header() {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-8">
             {navLinks.map(link => (
               <Link
                 key={link.path}
                 to={link.path}
-                className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground hover:text-foreground transition-colors duration-200"
+                className="text-[12px] font-medium tracking-wide uppercase text-muted-foreground hover:text-foreground transition-colors duration-200 xl:text-[13px]"
               >
                 {link.label}
               </Link>

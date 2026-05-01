@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { useCart } from '@/lib/CartContext';
@@ -7,11 +7,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ChevronLeft, Truck, RotateCcw, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { CATEGORY_LABELS, getProductSizes } from '@/lib/store-config';
+import { cn } from '@/lib/utils';
 
 export default function ProductDetail() {
   const path = window.location.pathname;
   const productId = path.split('/producto/')[1] || '';
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedSize, setSelectedSize] = useState('');
+  const [showSizeError, setShowSizeError] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
   const { addItem } = useCart();
 
@@ -26,8 +29,13 @@ export default function ProductDetail() {
 
   const handleAddToCart = () => {
     if (!product) return;
-    const size = selectedSize || product.sizes?.[0] || 'M';
-    addItem(product, size);
+
+    if (!selectedSize) {
+      setShowSizeError(true);
+      return;
+    }
+
+    addItem(product, selectedSize);
   };
 
   if (isLoading) {
@@ -55,6 +63,7 @@ export default function ProductDetail() {
   }
 
   const images = product.images || [];
+  const sizes = getProductSizes(product);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-16">
@@ -104,39 +113,47 @@ export default function ProductDetail() {
         {/* Product info */}
         <div className="flex flex-col">
           <p className="text-xs font-medium tracking-[0.3em] uppercase text-muted-foreground mb-2">
-            {product.category}
+            {CATEGORY_LABELS[product.category] || product.category}
           </p>
           <h1 className="text-2xl lg:text-4xl font-bold tracking-tight">{product.name}</h1>
           <p className="text-xl lg:text-2xl font-semibold mt-3">{product.price.toFixed(2)} €</p>
 
           {/* Sizes */}
-          {product.sizes && product.sizes.length > 0 && (
-            <div className="mt-8">
-              <p className="text-sm font-medium mb-3">Talla</p>
-              <div className="flex flex-wrap gap-2">
-                {product.sizes.map(size => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`px-5 py-2.5 border rounded-lg text-sm font-medium transition-all ${
-                      (selectedSize || product.sizes[0]) === size
-                        ? 'border-foreground bg-foreground text-background'
-                        : 'border-border hover:border-foreground/50'
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
+          <div className="mt-8">
+            <p className="text-sm font-medium mb-3">Talla</p>
+            <div className="grid grid-cols-4 gap-2 max-w-sm">
+              {sizes.map(size => (
+                <button
+                  key={size}
+                  type="button"
+                  onClick={() => {
+                    setSelectedSize(size);
+                    setShowSizeError(false);
+                  }}
+                  className={cn(
+                    'min-h-12 border rounded-lg text-sm font-medium transition-all',
+                    selectedSize === size
+                      ? 'border-foreground bg-foreground text-background'
+                      : 'border-border bg-background hover:border-foreground/50'
+                  )}
+                >
+                  {size}
+                </button>
+              ))}
             </div>
-          )}
+            <div className="mt-2 min-h-5">
+              {showSizeError && (
+                <p className="text-xs text-destructive">Selecciona una talla para añadir este producto.</p>
+              )}
+            </div>
+          </div>
 
           {/* Add to cart */}
           <Button
             onClick={handleAddToCart}
             className="mt-8 h-14 text-sm font-semibold tracking-wide uppercase rounded-xl"
           >
-            Comprar ahora
+            Añadir al carrito
           </Button>
 
           {/* Description */}
